@@ -1,23 +1,33 @@
 
+const startMenu = document.querySelector('.start-menu');
+const startBtn = document.querySelector('.start-btn');
+const gameboard = document.querySelector('.gameboard');
 
 
 
-function Player(name)
-{
-    this.name = name;
-}
+startBtn.addEventListener('click', (e) => {
+    e.preventDefault();
+    startMenu.classList.add('invisible');
+    gameboard.classList.remove('invisible');
+});
 
 
-const Gameboard = (() => {
-    let gameboard = [
-        [x, x, x],
-        [x, x, x],
-        [x, x, x]
-    ];
-})();
+// function Player(name)
+// {
+//     this.name = name;
+// }
 
 
-const Game = (() => {
+// const Gameboard = (() => {
+//    let gameboard = [
+//         [x, x, x],
+//         [x, x, x],
+//         [x, x, x]
+//     ];
+// })(); 
 
-})();
+
+// const Game = (() => {
+
+// })();
 
