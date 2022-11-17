@@ -20,14 +20,14 @@
             <div class="name-input">
                 <div>
                     <h3>Player X</h3>
-                    <input type="text" placeholder="Enter name">
+                    <input type="text" id="x-name" placeholder="Enter name">
                 </div>
                 <div>
                     <h3>Player O</h3>
-                    <input type="text" placeholder="Enter name">
+                    <input type="text" id="o-name" placeholder="Enter name">
                 </div>
             </div>
-            <button class="start-btn">Start</button>
+            <input type="submit" value="Start">
         </form>
 
 
@@ -35,18 +35,20 @@
 
 
 
+<div class="game-container">
+    <div class="gameboard invisible">
+        <div class="board-space" data-id="0"></div>
+        <div class="board-space" data-id="1"></div>
+        <div class="board-space" data-id="2"></div>
+        <div class="board-space" data-id="3"></div>
+        <div class="board-space" data-id="4"></div>
+        <div class="board-space" data-id="5"></div>
+        <div class="board-space" data-id="6"></div>
+        <div class="board-space" data-id="7"></div>
+        <div class="board-space" data-id="8"></div>
+    </div>
+</div>
 
-        <div class="gameboard invisible">
-            <div class="board-space" data-id="0"></div>
-            <div class="board-space" data-id="1"></div>
-            <div class="board-space" data-id="2"></div>
-            <div class="board-space" data-id="3"></div>
-            <div class="board-space" data-id="4"></div>
-            <div class="board-space" data-id="5"></div>
-            <div class="board-space" data-id="6"></div>
-            <div class="board-space" data-id="7"></div>
-            <div class="board-space" data-id="8"></div>
-        </div>
 
     </main>
 </body>

@@ -1,21 +1,16 @@
 
 const startMenu = document.querySelector('.start-menu');
-const startBtn = document.querySelector('.start-btn');
 const gameboard = document.querySelector('.gameboard');
+const form = document.querySelector('form');
 
 
 
-startBtn.addEventListener('click', (e) => {
-    e.preventDefault();
-    startMenu.classList.add('invisible');
-    gameboard.classList.remove('invisible');
-});
 
-
-// function Player(name)
-// {
-//     this.name = name;
-// }
+function Player(name)
+{
+    this.name = name;
+    this.score = 0;
+}
 
 
 // const Gameboard = (() => {
@@ -27,7 +22,20 @@ startBtn.addEventListener('click', (e) => {
 // })(); 
 
 
-// const Game = (() => {
 
-// })();
 
+function Game(){
+    const xName = document.querySelector('#x-name');
+    const oName = document.querySelector('#o-name');
+
+    let players = [new Player(xName.value), new Player(oName.value)];
+
+    startMenu.classList.add('invisible');
+
+    gameboard.classList.remove('invisible');
+}
+
+form.addEventListener('submit', (e) => {
+    e.preventDefault();
+    Game();
+});
