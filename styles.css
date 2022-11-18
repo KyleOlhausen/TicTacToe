@@ -1,6 +1,7 @@
 html, body, main{
     height: 100%;
     margin: 0;
+    background-color: gray;
 }
 
 
@@ -32,7 +33,23 @@ html, body, main{
 }
 
 .gameboard {
-    background-color: black;
+    background-color: lightgray;
     width: 450px;
     height: 450px;
+    display:grid;
+    border: 5px solid black;
+    grid-template: 147px 147px 147px / 147px 147px 147px;
+    background-color: black;
+    gap: 5px;
+
+}
+.board-space {
+    background-color: lightgray;
+    justify-content: center;
+    align-items: center;
+}
+
+.board-space:hover {
+    background-color: lightyellow;
+    cursor: pointer;
 }
