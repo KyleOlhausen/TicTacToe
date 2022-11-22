@@ -3,26 +3,15 @@
 
 
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 function Player(name, playerLetter)
 {
     this.name = name;
     this.playerLetter = playerLetter
     this.score = 0;
+
+    function getName() {
+        return name;
+    }
 
     function getLetter() {
         return playerLetter;
@@ -36,7 +25,7 @@ function Player(name, playerLetter)
         this.score = newScore;
     }
 
-    return {getLetter, getScore, setScore};
+    return {getName, getLetter, getScore, setScore};
 }
 
 const Gameboard = (() => {
@@ -84,11 +73,39 @@ const Gameboard = (() => {
     //return textContent
 
 
+    //checkWin(playerLetter)
+    //check each element in board array, if (playerLetter), save index to array
+    //check if the array nums are in the 2d array of winning combos
+    //clear array at end
+    function checkWin(playerLetter)
+    {
+        const winCombos = [
+            [0,1,2],
+            [0,3,6],
+            [3,4,5],
+            [6,7,8],
+            [1,4,7],
+            [2,4,6],
+            [2,5,8],
+            [0,4,8]
+        ];
+        
+        //check array methods to see best way to do this
+        let playerSpaces = board.filter(e =>  e.textContent === playerLetter);
+
+        return winCombos
+        .filter((combination) => combination.includes(playerSpaces))
+        .some((possibleCombination) =>
+          possibleCombination.every(
+            (index) => playerSpaces[index] === "X"//?????
+          ));
+
+
+    }
 
 
 
-
-    return {setSpace, prepBoard};
+    return {setSpace, prepBoard, checkWin};
 
 })();
 
@@ -107,7 +124,7 @@ form.addEventListener('submit', (e) => {
 
 
 
-function gameDriver()
+function gameDriver()//probably can just have this outside of the function
 {
     
     const xName = document.querySelector('#x-name');
@@ -121,6 +138,7 @@ function gameDriver()
     //make player info show on left and right of board
 
     //playRound(players);
+    playRound(players);
 
 
 }
@@ -132,10 +150,9 @@ function nextTurn(playerTurn)
     return 0;
 }
 
-//checkWin(playerLetter)
-//check each element in board array, if (playerLetter), save index to array
-//check if the array nums are in the 2d array of winning combos
-//clear array at end
+
+
+
 
 function playRound(players)
 {
@@ -144,7 +161,7 @@ function playRound(players)
     while(endRound == false)
     {
         Gameboard.prepBoard(players, playerTurn);
-        //checkWin
+        Gameboard.checkWin(players[playerTurn].getLetter());
         playerTurn = nextTurn(playerTurn);
     }
     
