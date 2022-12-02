@@ -28,55 +28,86 @@ function Player(name, playerLetter)
     return {getName, getLetter, getScore, setScore};
 }
 
+
+
+
+
+
+
+
+
+
+
 const Gameboard = (() => {
     let board = ["", "", "", "", "", "", "", "", ""];
 
 
-    function prepBoard(players, playerTurn)
-    {
+
         const boardSpaces = document.querySelectorAll('.board-space');
 
         boardSpaces.forEach( space => {
-            space.addEventListener('click', e => {Gameboard.setSpace(players[playerTurn].getLetter(), space)})
-        });
-    }
-
-
-    function validateChoice(space)
-    {
-        if(space.textContent != "") return false;
-        return true;
-    }
-
-
-
-    //function setSpace(playerLetter)
-    //check data-id of space clicked, loop array til i > data-id number
-    //add (playerLetter) to board array
-    //set data-id textContent to playerLetter
-    function setSpace(playerLetter, space){
-        if(validateChoice(space))
-        {
-            let spaceNum = space.dataset.id;
-            for(i = 0; i < spaceNum; i++)
-            {
-                if(i == spaceNum)
+            space.addEventListener('click', e => {
+                if( space.textContent == "")
                 {
-                    board[i] == playerLetter;
-                    space.textContent = playerLetter;
+                    GameDriver.playRound(space);
                 }
-            }
-        }
+            })
+        });
+
+
+    function setSpace(playerLetter, space){
+    
+            let spaceNum = space.dataset.id;
+
+            board[spaceNum] = playerLetter;
+            space.textContent = playerLetter;  
     }
 
-    //getSpace()
-    //return textContent
+    function getBoard(){
+        return board;
+    }
 
 
-    //checkWin(playerLetter)
-    //check each element in board array, if (playerLetter), save index to array
-    //check if the array nums are in the 2d array of winning combos
-    //clear array at end
+    return {setSpace, getBoard};
+
+})();
+
+
+
+
+
+
+const startMenu = document.querySelector('.start-menu');
+const gameboard = document.querySelector('.gameboard');
+const form = document.querySelector('form');
+
+
+
+
+form.addEventListener('submit', (e) => {
+    e.preventDefault();
+    GameDriver();
+});
+
+
+
+
+const GameDriver = (() => {
+    
+    const xName = document.querySelector('#x-name');
+    const oName = document.querySelector('#o-name');
+
+    let players = [new Player(xName.value, "X"), new Player(oName.value, "O")];
+    let playerTurn = 0;
+
+    startMenu.classList.add('invisible');
+    gameboard.classList.remove('invisible');
+ 
+    const nextTurn = (playerTurn) => {
+        if(playerTurn == 0) return 1;
+        return 0;
+    }
+
     function checkWin(playerLetter)
     {
         const winCombos = [
@@ -90,7 +121,7 @@ const Gameboard = (() => {
             [0,4,8]
         ];
         
-        let playerSpaces = board.filter(e =>  e.textContent === playerLetter);
+        let playerSpaces = Gameboard.getBoard().filter(e =>  e.textContent === playerLetter);
         let win = false;
         
         winCombos.forEach((combo) => {
@@ -100,69 +131,33 @@ const Gameboard = (() => {
         return win;
     }
 
+    function playRound(space) 
+    {
+        Gameboard.setSpace(players[playerTurn].getLetter(), space)
+        checkWin(players[playerTurn].getLetter());
+        playerTurn = nextTurn(playerTurn); 
+    }
 
-    return {setSpace, prepBoard, checkWin};
-
+    return {checkWin, nextTurn, playRound}
 })();
 
 
-const startMenu = document.querySelector('.start-menu');
-const gameboard = document.querySelector('.gameboard');
-const form = document.querySelector('form');
-
-
-
-form.addEventListener('submit', (e) => {
-    e.preventDefault();
-    gameDriver();
-});
 
 
 
 
 
-function gameDriver()//probably can just have this outside of the function
-{
-    
-    const xName = document.querySelector('#x-name');
-    const oName = document.querySelector('#o-name');
-
-    let players = [new Player(xName.value, "X"), new Player(oName.value, "O")];
-
-    startMenu.classList.add('invisible');
-    gameboard.classList.remove('invisible');
-
-    //make player info show on left and right of board
-
-    //playRound(players);
-    playRound(players);
-
-
-}
-
-
-function nextTurn(playerTurn) 
-{
-    if(playerTurn == 0) return 1;
-    return 0;
-}
 
 
 
 
 
-function playRound(players)
-{
-    let endRound = false;
-    let playerTurn = 0;
-    while(endRound == false)
-    {
-        Gameboard.prepBoard(players, playerTurn);
-        Gameboard.checkWin(players[playerTurn].getLetter());
-        playerTurn = nextTurn(playerTurn);
-    }
-    
 
-}
+
+
+
+
+
+
 
 
