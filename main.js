@@ -90,19 +90,15 @@ const Gameboard = (() => {
             [0,4,8]
         ];
         
-        //check array methods to see best way to do this
         let playerSpaces = board.filter(e =>  e.textContent === playerLetter);
-
-        return winCombos
-        .filter((combination) => combination.includes(playerSpaces))
-        .some((possibleCombination) =>
-          possibleCombination.every(
-            (index) => playerSpaces[index] === "X"//?????
-          ));
-
-
+        let win = false;
+        
+        winCombos.forEach((combo) => {
+            if(playerSpaces.includes(combo)) win = true;
+        });
+        
+        return win;
     }
-
 
 
     return {setSpace, prepBoard, checkWin};
@@ -113,6 +109,7 @@ const Gameboard = (() => {
 const startMenu = document.querySelector('.start-menu');
 const gameboard = document.querySelector('.gameboard');
 const form = document.querySelector('form');
+
 
 
 form.addEventListener('submit', (e) => {
