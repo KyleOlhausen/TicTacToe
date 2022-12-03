@@ -1,17 +1,69 @@
 html, body, main{
     height: 100%;
     margin: 0;
-    background-color: gray;
+    background-color: rgb(148, 131, 66);
+    
+}
+
+.board-space {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    font-size: 100px;
+}
+
+button, .btn {
+    border-radius: 20px;
+    padding: 10px 20px;
+}
+
+button:hover, .btn:hover {
+    cursor: pointer;
+    background-color: rgb(235, 90, 90);
 }
 
 
+header h1{
+    display: flex;
+    justify-content: center;
+    margin-top: 50px;
+    margin-bottom: 0px;
+}
+
+
+.winner {
+    display: flex;
+    justify-content: center;
+    margin-top: 0px;
+}
+
+.scores {
+    display: flex;
+    justify-content: center;
+    gap: 100px;
+    margin-top: 0px;
+}
+
+.options {
+    display: flex;
+    justify-content: center;
+    gap: 100px;
+    margin: 20px;
+}
+
 /* START MENU */
+
+form {
+    margin-top: 0px;
+}
+
 .start-menu {
     display: flex;
     flex-direction: column;
     align-items: center;
     justify-content: center;
     gap: 50px;
+    
 }
 
 .name-input {

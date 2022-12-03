@@ -1,15 +1,8 @@
-const startMenu = document.querySelector('.start-menu');
-const gameboard = document.querySelector('.gameboard');
-const form = document.querySelector('form');
-const winner = document.querySelector('.winner');
 
 
-form.addEventListener('submit', (e) => {
-    e.preventDefault();
-    GameDriver.createPlayers();
-    startMenu.classList.add('invisible');
-    gameboard.classList.remove('invisible');
-});
+
+
+
 
 
 function Player(name, playerLetter)
@@ -25,16 +18,8 @@ function Player(name, playerLetter)
     function getLetter() {
         return playerLetter;
     }
-    
-    function getScore() {
-        return score;
-    }
 
-    function setScore(newScore) {
-        this.score = newScore;
-    }
-
-    return {getName, getLetter, getScore, setScore};
+    return {getName, getLetter};
 }
 
 
@@ -42,35 +27,92 @@ function Player(name, playerLetter)
 const Gameboard = (() => {
     let board = ["", "", "", "", "", "", "", "", ""];
     const boardSpaces = document.querySelectorAll('.board-space');
-
     boardSpaces.forEach( space => {
         space.addEventListener('click', e => {
             if(space.textContent == "" && !GameDriver.getIsOver())
             {
-                GameDriver.playRound(space);
+                GameDriver.playMove(space);
             }
         })
     });
 
-    function setSpace(playerLetter, space){
+    function setSpace(playerLetter, space) {
             board[space.dataset.id] = playerLetter;
             space.textContent = playerLetter;  
     }
 
-    function getBoard(){
+    function getBoard() {
         return board;
     }
 
-    return {setSpace, getBoard};
+    function clearBoard() {
+        boardSpaces.forEach(space => {
+            board[space.dataset.id] = "";
+            space.textContent = "";
+         })
+    }
+
+    return {setSpace, getBoard, clearBoard};
 })();
 
 
 
 const GameDriver = (() => {
-    
     let players = [];
     let playerTurn = 0;
     let isOver = false;
+    playerxScore = 0
+    playeroScore = 0
+
+    const startMenu = document.querySelector('.start-menu');
+    const gameboard = document.querySelector('.gameboard');
+    const form = document.querySelector('form');
+    const winner = document.querySelector('.winner');
+    const scores = document.querySelector('.scores');
+    const xScore = document.querySelector('.player-x');
+    const oScore = document.querySelector('.player-o');
+    const playAgainBtn = document.querySelector('.play-again');
+    const newGameBtn = document.querySelector('.new-game');
+    const options = document.querySelector('.options');
+    
+
+    playAgainBtn.addEventListener('click', (e) => { 
+        Gameboard.clearBoard();
+        playerTurn = 0;
+        isOver = false;
+        winner.classList.add('invisible');
+    });
+
+    newGameBtn.addEventListener('click', (e) => {
+        displayScore();
+        newGame();
+        hideBoard();
+    })
+
+    function newGame() {
+        Gameboard.clearBoard();
+        players = [];
+        playerTurn = 0;
+        isOver = false;
+        playerxScore = 0
+        playeroScore = 0
+    }
+
+    function hideBoard() {
+        winner.classList.add('invisible');
+        gameboard.classList.add('invisible');
+        scores.classList.add('invisible');
+        options.classList.add('invisible');
+        startMenu.classList.remove('invisible');
+    }
+
+    function displayBoard() {
+        startMenu.classList.add('invisible');
+        gameboard.classList.remove('invisible');
+        scores.classList.remove('invisible');
+        options.classList.remove('invisible');
+    }
+  
 
     const winCombos = [
         [0,1,2],
@@ -82,6 +124,17 @@ const GameDriver = (() => {
         [2,5,8],
         [0,4,8]
     ];
+
+
+    form.addEventListener('submit', (e) => {
+        e.preventDefault();
+        createPlayers();
+        displayScore();
+        displayBoard();
+    });
+
+
+
 
     const nextTurn = (playerTurn) => {
         if(playerTurn == 0) return 1;
@@ -111,25 +164,48 @@ const GameDriver = (() => {
         return win;
     }
 
-    function playRound(space) 
+    function playMove(space) 
     {
-        Gameboard.setSpace(players[playerTurn].getLetter(), space)
+        currPlayer = players[playerTurn];
+        Gameboard.setSpace(currPlayer.getLetter(), space)
         
-        isOver = checkWin(players[playerTurn].getLetter());
+        isOver = checkWin(currPlayer.getLetter());
         if(isOver){
-            displayWinner();
-            //add function to add to player score and display score
-            //show restart button
+            displayWinner(currPlayer);
+            addScore(currPlayer);
+            displayScore();
         } 
+        else if(!Gameboard.getBoard().includes("")){
+            isOver = true;
+            winner.textContent = "Tie!";
+            winner.classList.remove('invisible');
+        }
         playerTurn = nextTurn(playerTurn); 
     }
 
-    //restart function clears board
+
+   
 
 
-    function displayWinner() {
-        let playerName = players[playerTurn].getName();
-        winner.textContent =  playerName + " Wins!";
+    function displayScore()
+    {
+        xScore.textContent = players[0].getName() + ": " + playerxScore;
+        oScore.textContent = players[1].getName() + ": " + playeroScore;
+    }
+
+    function addScore(currPlayer)
+    {
+        if(currPlayer.getLetter() == "X"){
+            playerxScore += 1;
+        }
+        else {
+            playeroScore += 1;
+        }
+    }
+
+
+    function displayWinner(currPlayer) {
+        winner.textContent =  currPlayer.getName() + " Wins!";
         winner.classList.remove('invisible');
     }
 
@@ -138,5 +214,5 @@ const GameDriver = (() => {
         return isOver;
     }
 
-    return {checkWin, nextTurn, playRound, getIsOver, createPlayers}
+    return {checkWin, nextTurn, playMove, getIsOver, createPlayers}
 })();

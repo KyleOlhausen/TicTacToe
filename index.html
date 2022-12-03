@@ -27,16 +27,24 @@
                     <input type="text" id="o-name" placeholder="Enter name">
                 </div>
             </div>
-            <input type="submit" value="Start">
+            <input class="btn" type="submit" value="Start">
         </form>
 
 
         <h2 class="winner invisible"></h2>
 
+        <div class="scores">
+            <h3 class="player-x"></h3>
+            <h3 class="player-o"></h3>
+        </div>
+        
+
+        
+
 
 
         <div class="game-container">
-            <div class="gameboard">
+            <div class="gameboard invisible">
                 <div class="board-space" data-id="0"></div>
                 <div class="board-space" data-id="1"></div>
                 <div class="board-space" data-id="2"></div>
@@ -49,6 +57,10 @@
             </div>
         </div>
 
+        <div class="options invisible">
+            <button class="play-again">Play Again</button>
+            <button class="new-game">New Game</button>
+        </div>
 
     </main>
 </body>
