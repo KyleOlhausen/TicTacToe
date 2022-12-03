@@ -1,10 +1,4 @@
 
-
-
-
-
-
-
 function Player(name, playerLetter)
 {
     this.name = name;
@@ -27,10 +21,10 @@ function Player(name, playerLetter)
 const Gameboard = (() => {
     let board = ["", "", "", "", "", "", "", "", ""];
     const boardSpaces = document.querySelectorAll('.board-space');
+
     boardSpaces.forEach( space => {
         space.addEventListener('click', e => {
-            if(space.textContent == "" && !GameDriver.getIsOver())
-            {
+            if(space.textContent == "" && !GameDriver.getIsOver()){
                 GameDriver.playMove(space);
             }
         })
@@ -64,56 +58,9 @@ const GameDriver = (() => {
     playerxScore = 0
     playeroScore = 0
 
-    const startMenu = document.querySelector('.start-menu');
-    const gameboard = document.querySelector('.gameboard');
     const form = document.querySelector('form');
-    const winner = document.querySelector('.winner');
-    const scores = document.querySelector('.scores');
-    const xScore = document.querySelector('.player-x');
-    const oScore = document.querySelector('.player-o');
     const playAgainBtn = document.querySelector('.play-again');
     const newGameBtn = document.querySelector('.new-game');
-    const options = document.querySelector('.options');
-    
-
-    playAgainBtn.addEventListener('click', (e) => { 
-        Gameboard.clearBoard();
-        playerTurn = 0;
-        isOver = false;
-        winner.classList.add('invisible');
-    });
-
-    newGameBtn.addEventListener('click', (e) => {
-        displayScore();
-        newGame();
-        hideBoard();
-    })
-
-    function newGame() {
-        Gameboard.clearBoard();
-        players = [];
-        playerTurn = 0;
-        isOver = false;
-        playerxScore = 0
-        playeroScore = 0
-    }
-
-    function hideBoard() {
-        winner.classList.add('invisible');
-        gameboard.classList.add('invisible');
-        scores.classList.add('invisible');
-        options.classList.add('invisible');
-        startMenu.classList.remove('invisible');
-    }
-
-    function displayBoard() {
-        startMenu.classList.add('invisible');
-        gameboard.classList.remove('invisible');
-        scores.classList.remove('invisible');
-        options.classList.remove('invisible');
-    }
-  
-
     const winCombos = [
         [0,1,2],
         [0,3,6],
@@ -125,22 +72,39 @@ const GameDriver = (() => {
         [0,4,8]
     ];
 
+    playAgainBtn.addEventListener('click', (e) => { 
+        Gameboard.clearBoard();
+        playerTurn = 0;
+        isOver = false;
+        displayController.hideWinner()
+    });
+
+    newGameBtn.addEventListener('click', (e) => {
+        displayController.displayScore(players);
+        newGame();
+        displayController.hideBoard();
+    })
 
     form.addEventListener('submit', (e) => {
         e.preventDefault();
         createPlayers();
-        displayScore();
-        displayBoard();
+        displayController.displayScore(players);
+        displayController.displayBoard();
     });
 
-
-
-
-    const nextTurn = (playerTurn) => {
+    function nextTurn(playerTurn){
         if(playerTurn == 0) return 1;
         return 0;
     }
-
+    
+    function newGame() {
+        Gameboard.clearBoard();
+        players = [];
+        playerTurn = 0;
+        isOver = false;
+        playerxScore = 0
+        playeroScore = 0
+    }
 
     function createPlayers(){
         const xName = document.querySelector('#x-name');
@@ -171,26 +135,15 @@ const GameDriver = (() => {
         
         isOver = checkWin(currPlayer.getLetter());
         if(isOver){
-            displayWinner(currPlayer);
+            displayController.displayWinner(currPlayer);
             addScore(currPlayer);
-            displayScore();
+            displayController.displayScore(players);
         } 
         else if(!Gameboard.getBoard().includes("")){
             isOver = true;
-            winner.textContent = "Tie!";
-            winner.classList.remove('invisible');
+            displayController.displayTie();
         }
         playerTurn = nextTurn(playerTurn); 
-    }
-
-
-   
-
-
-    function displayScore()
-    {
-        xScore.textContent = players[0].getName() + ": " + playerxScore;
-        oScore.textContent = players[1].getName() + ": " + playeroScore;
     }
 
     function addScore(currPlayer)
@@ -203,16 +156,60 @@ const GameDriver = (() => {
         }
     }
 
+    function getIsOver()
+    {
+        return isOver;
+    }
+
+    return {playMove, getIsOver}
+})();
+
+
+
+
+const displayController = (() => {
+    const startMenu = document.querySelector('.start-menu');
+    const gameboard = document.querySelector('.gameboard');
+    const winner = document.querySelector('.winner');
+    const scores = document.querySelector('.scores');
+    const xScore = document.querySelector('.player-x');
+    const oScore = document.querySelector('.player-o');
+    const options = document.querySelector('.options');
+
+    function hideWinner() {
+        winner.classList.add('invisible');
+    }
 
     function displayWinner(currPlayer) {
         winner.textContent =  currPlayer.getName() + " Wins!";
         winner.classList.remove('invisible');
     }
 
-    function getIsOver()
-    {
-        return isOver;
+    function displayTie() {
+        winner.textContent = "Tie!";
+        winner.classList.remove('invisible');
     }
 
-    return {checkWin, nextTurn, playMove, getIsOver, createPlayers}
+    function displayScore(players)
+    {
+        xScore.textContent = players[0].getName() + ": " + playerxScore;
+        oScore.textContent = players[1].getName() + ": " + playeroScore;
+    }
+
+    function hideBoard() {
+        winner.classList.add('invisible');
+        gameboard.classList.add('invisible');
+        scores.classList.add('invisible');
+        options.classList.add('invisible');
+        startMenu.classList.remove('invisible');
+    }
+
+    function displayBoard() {
+        startMenu.classList.add('invisible');
+        gameboard.classList.remove('invisible');
+        scores.classList.remove('invisible');
+        options.classList.remove('invisible');
+    }
+  
+    return {hideWinner, displayTie, displayWinner, displayScore, hideBoard, displayBoard}
 })();

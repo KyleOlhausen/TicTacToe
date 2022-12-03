@@ -5,11 +5,11 @@ html, body, main{
     
 }
 
-.board-space {
+header h1{
     display: flex;
     justify-content: center;
-    align-items: center;
-    font-size: 100px;
+    margin-top: 50px;
+    margin-bottom: 0px;
 }
 
 button, .btn {
@@ -21,15 +21,6 @@ button:hover, .btn:hover {
     cursor: pointer;
     background-color: rgb(235, 90, 90);
 }
-
-
-header h1{
-    display: flex;
-    justify-content: center;
-    margin-top: 50px;
-    margin-bottom: 0px;
-}
-
 
 .winner {
     display: flex;
@@ -51,8 +42,12 @@ header h1{
     margin: 20px;
 }
 
-/* START MENU */
+.invisible {
+    transform: scale(0);   
+   }
 
+
+/* START MENU */
 form {
     margin-top: 0px;
 }
@@ -71,13 +66,7 @@ form {
     gap: 50px;
 }
 
-
-
-.invisible {
- transform: scale(0);   
-}
-
-
+/* GAME BOARD */
 .game-container {
     display: flex;
     justify-content: center;
@@ -95,10 +84,13 @@ form {
     gap: 5px;
 
 }
+
 .board-space {
     background-color: lightgray;
+    display: flex;
     justify-content: center;
     align-items: center;
+    font-size: 100px;
 }
 
 .board-space:hover {
