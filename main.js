@@ -1,6 +1,15 @@
+const startMenu = document.querySelector('.start-menu');
+const gameboard = document.querySelector('.gameboard');
+const form = document.querySelector('form');
+const winner = document.querySelector('.winner');
 
 
-
+form.addEventListener('submit', (e) => {
+    e.preventDefault();
+    GameDriver.createPlayers();
+    startMenu.classList.add('invisible');
+    gameboard.classList.remove('invisible');
+});
 
 
 function Player(name, playerLetter)
@@ -30,36 +39,21 @@ function Player(name, playerLetter)
 
 
 
-
-
-
-
-
-
-
-
 const Gameboard = (() => {
     let board = ["", "", "", "", "", "", "", "", ""];
+    const boardSpaces = document.querySelectorAll('.board-space');
 
-
-
-        const boardSpaces = document.querySelectorAll('.board-space');
-
-        boardSpaces.forEach( space => {
-            space.addEventListener('click', e => {
-                if( space.textContent == "")
-                {
-                    GameDriver.playRound(space);
-                }
-            })
-        });
-
+    boardSpaces.forEach( space => {
+        space.addEventListener('click', e => {
+            if(space.textContent == "" && !GameDriver.getIsOver())
+            {
+                GameDriver.playRound(space);
+            }
+        })
+    });
 
     function setSpace(playerLetter, space){
-    
-            let spaceNum = space.dataset.id;
-
-            board[spaceNum] = playerLetter;
+            board[space.dataset.id] = playerLetter;
             space.textContent = playerLetter;  
     }
 
@@ -67,97 +61,82 @@ const Gameboard = (() => {
         return board;
     }
 
-
     return {setSpace, getBoard};
-
 })();
-
-
-
-
-
-
-const startMenu = document.querySelector('.start-menu');
-const gameboard = document.querySelector('.gameboard');
-const form = document.querySelector('form');
-
-
-
-
-form.addEventListener('submit', (e) => {
-    e.preventDefault();
-    GameDriver();
-});
-
 
 
 
 const GameDriver = (() => {
     
-    const xName = document.querySelector('#x-name');
-    const oName = document.querySelector('#o-name');
-
-    let players = [new Player(xName.value, "X"), new Player(oName.value, "O")];
+    let players = [];
     let playerTurn = 0;
+    let isOver = false;
 
-    startMenu.classList.add('invisible');
-    gameboard.classList.remove('invisible');
- 
+    const winCombos = [
+        [0,1,2],
+        [0,3,6],
+        [3,4,5],
+        [6,7,8],
+        [1,4,7],
+        [2,4,6],
+        [2,5,8],
+        [0,4,8]
+    ];
+
     const nextTurn = (playerTurn) => {
         if(playerTurn == 0) return 1;
         return 0;
     }
 
+
+    function createPlayers(){
+        const xName = document.querySelector('#x-name');
+        const oName = document.querySelector('#o-name');
+        players = [new Player(xName.value, "X"), new Player(oName.value, "O")];
+    }
+
     function checkWin(playerLetter)
-    {
-        const winCombos = [
-            [0,1,2],
-            [0,3,6],
-            [3,4,5],
-            [6,7,8],
-            [1,4,7],
-            [2,4,6],
-            [2,5,8],
-            [0,4,8]
-        ];
-        
-        let playerSpaces = Gameboard.getBoard().filter(e =>  e.textContent === playerLetter);
+    {   
+        let playerSpaces = [];
         let win = false;
-        
-        winCombos.forEach((combo) => {
-            if(playerSpaces.includes(combo)) win = true;
+
+        Gameboard.getBoard().forEach((e, i) => {
+            if(e === playerLetter) playerSpaces.push(i);
         });
         
+        winCombos.forEach((combo) => {
+            if(combo.every(e => {return playerSpaces.includes(e);})) win = true;
+        });
+
         return win;
     }
 
     function playRound(space) 
     {
         Gameboard.setSpace(players[playerTurn].getLetter(), space)
-        checkWin(players[playerTurn].getLetter());
+        
+        isOver = checkWin(players[playerTurn].getLetter());
+        if(isOver){
+            displayWinner();
+            //add function to add to player score and display score
+            //show restart button
+        } 
         playerTurn = nextTurn(playerTurn); 
     }
 
-    return {checkWin, nextTurn, playRound}
+    //restart function clears board
+
+
+    function displayWinner() {
+        let playerName = players[playerTurn].getName();
+        winner.textContent =  playerName + " Wins!";
+        winner.classList.remove('invisible');
+    }
+
+    function getIsOver()
+    {
+        return isOver;
+    }
+
+    return {checkWin, nextTurn, playRound, getIsOver, createPlayers}
 })();
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
